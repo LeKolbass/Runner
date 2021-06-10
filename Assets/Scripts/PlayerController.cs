@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,10 +14,10 @@ public class PlayerController : MonoBehaviour
     Collider2D Mycollider;
 
     public bool isGrounded;
-    public bool CanStand;
+
 
     public LayerMask WhatIsGround;
-    public LayerMask WhatIsFloor;
+
 
 
     void Start()
@@ -30,10 +31,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         isGrounded = Physics2D.IsTouchingLayers(Mycollider, WhatIsGround);
-        CanStand = Physics2D.IsTouchingLayers(Mycollider, WhatIsFloor);
+        
         rb.velocity = new Vector2(movespeed, rb.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             if (isGrounded)
             {
@@ -43,12 +44,18 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            transform.localScale = new Vector2(0.5f, 0.3f);
+            transform.localScale = new Vector2(0.5f, 0.2f);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
             transform.localScale = new Vector2(0.5f, 0.5f);
         }
     }
-
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.tag == "Respawn")
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
 }
