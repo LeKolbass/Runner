@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     Collider2D Mycollider;
 
     public bool isGrounded;
+    public static bool isImmortal;
 
 
     public LayerMask WhatIsGround;
@@ -51,11 +52,24 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2(0.5f, 0.5f);
         }
     }
+    private IEnumerator shield()
+    {
+        isImmortal = true;
+        yield return new WaitForSeconds(7);
+        isImmortal = false;
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Respawn")
+        if(other.tag == "Respawn" && isImmortal == false)
         {
             SceneManager.LoadScene(0);
         }
+        if (other.tag.Equals("Shield"))
+        {
+            StartCoroutine(shield());
+            Destroy(other.gameObject);
+        }
     }
+
+
 }
