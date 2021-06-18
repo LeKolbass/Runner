@@ -9,11 +9,13 @@ public class PlayerController : MonoBehaviour
 
     public float movespeed;
     public float jumpforce;
-
+    public static int CoinScore;
     Rigidbody2D rb;
     Collider2D Mycollider;
-
+    public GameObject wings;
+    public GameObject PanelRestart;
     public bool isGrounded;
+    public bool Alive;
     public static bool isImmortal;
 
 
@@ -26,7 +28,9 @@ public class PlayerController : MonoBehaviour
         
         rb = GetComponent<Rigidbody2D>();
         Mycollider = GetComponent<Collider2D>();
-    }
+        PanelRestart.SetActive(false);
+        Alive = true;
+}
 
 
     void Update()
@@ -35,7 +39,7 @@ public class PlayerController : MonoBehaviour
         
         rb.velocity = new Vector2(movespeed, rb.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && Alive == true)
         {
             if (isGrounded)
             {
@@ -51,6 +55,19 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector2(0.5f, 0.5f);
         }
+        if (Input.GetKeyDown(KeyCode.I) && ScoreManager.CoinScore >=10 && isImmortal == false)
+        {
+            StartCoroutine(shield());
+            ScoreManager.CoinScore -= 10;
+        }
+        if(isImmortal == true)
+        {
+            wings.SetActive(true);
+        }
+        else
+        {
+            wings.SetActive(false);
+        }
     }
     private IEnumerator shield()
     {
@@ -62,9 +79,15 @@ public class PlayerController : MonoBehaviour
     {
         if(other.tag == "Respawn" && isImmortal == false)
         {
-            SceneManager.LoadScene(0);
+            ScoreManager.CoinScore -= ScoreManager.CoinScore;
+            //ScoreManager.score -= ScoreManager.score;
+            Alive = false;
+            gameObject.SetActive(false);
+            PanelRestart.SetActive(true);
+            
+            //SceneManager.LoadScene(0);
         }
-        if (other.tag.Equals("Shield"))
+        if (other.tag.Equals("Shield") && isImmortal == false)
         {
             StartCoroutine(shield());
             Destroy(other.gameObject);

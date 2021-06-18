@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    public int score = 0;
+    public static int score;
     public Text scoreDisplay;
-    public int CoinScore = 0;
+    public static int CoinScore;
     public Text CoinScoreDisplay;
 
     void Start()
     {
-
+    
     }
 
 
